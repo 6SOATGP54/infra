@@ -9,9 +9,9 @@ locals {
   vpc_cidr = "172.31.0.0/16"
   azs      = ["us-east-1a", "us-east-1b"]
 
-  public_subnets  = ["subnet-056aa0bda01905c8f", "subnet-073805c092643f2f3"]
-  private_subnets = ["subnet-056f9754ec5f40f32", "subnet-0a8a347d1a8d57ff9"]
-  intra_subnets   = ["subnet-05f43d62fa98a1a89", "subnet-041f0830fe1737b2e"]
+  public_subnets  = ["172.31.64.0/20", "172.31.144.0/20"]
+  private_subnets = ["172.31.48.0/20", "172.31.0.0/20"]
+  intra_subnets   = ["172.31.80.0/20", "172.31.32.0/20"]
 
   tags = {
 
@@ -117,9 +117,5 @@ module "eks" {
       }
     }
   }
-
-
-  
-
   tags = local.tags
 }
