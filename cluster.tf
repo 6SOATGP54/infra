@@ -79,9 +79,10 @@ module "eks" {
   subnet_ids               = module.vpc.private_subnets
   control_plane_subnet_ids = module.vpc.intra_subnets
 
-  # Corrigido: converte a lista em um mapa para o EKS
+  # Corrigido: Incluindo o atributo "type"
   cluster_security_group_additional_rules = {
     "allow_db_access" = {
+      type                            = "ingress"  # Define se a regra é de entrada (ingress) ou saída (egress)
       description                     = "Allow access to DB"
       from_port                        = 5432
       to_port                          = 5432
