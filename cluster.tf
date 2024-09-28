@@ -16,6 +16,13 @@ locals {
   tags = {}
 }
 
+data "aws_security_group" "existing_sg" {
+  filter {
+    name   = "group-name"
+    values = ["aurora-sg"]
+  }
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 4.0"
@@ -37,25 +44,6 @@ module "vpc" {
     "kubernetes.io/role/internal-elb" = 1
   }
 }
-
-resource "aws_security_group" "aurora_sg" {
-  name = "aurora-sg"
-
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.15.1"
@@ -88,7 +76,7 @@ module "eks" {
       to_port                          = 5432
       protocol                         = "tcp"
       cidr_blocks                      = ["0.0.0.0/0"]
-      security_group_id                = [aws_security_group.aurora_sg.id]
+      security_group_id                = [data.aws_securty_group.existing_sg.id]
       source_cluster_security_group    = false
     }
   }
