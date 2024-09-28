@@ -13,22 +13,19 @@ locals {
   private_subnets = ["172.31.48.0/20", "172.31.0.0/20"]
   intra_subnets   = ["172.31.80.0/20", "172.31.32.0/20"]
 
-  tags = {
-
-  }
+  tags = {}
 }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 4.0"
 
-  name = local.name
-  cidr = local.vpc_cidr
-
-  azs             = local.azs
-  private_subnets = local.private_subnets
-  public_subnets  = local.public_subnets
-  intra_subnets   = local.intra_subnets
+  name             = local.name
+  cidr             = local.vpc_cidr
+  azs              = local.azs
+  private_subnets  = local.private_subnets
+  public_subnets   = local.public_subnets
+  intra_subnets    = local.intra_subnets
 
   enable_nat_gateway = true
 
@@ -59,7 +56,6 @@ resource "aws_security_group" "aurora_sg" {
   }
 }
 
-
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.15.1"
@@ -83,17 +79,18 @@ module "eks" {
   subnet_ids               = module.vpc.private_subnets
   control_plane_subnet_ids = module.vpc.intra_subnets
 
-
- cluster_security_group_additional_rules = [{
-    description                     = "Allow access to DB"
-    from_port                        = 5432
-    to_port                          = 5432
-    protocol                         = "tcp"
-    cidr_blocks                      = ["0.0.0.0/0"]
-    security_group_id                = [aws_security_group.aurora_sg.id]
-    source_cluster_security_group    = false
-  }]
-
+  # Corrigido: converte a lista em um mapa para o EKS
+  cluster_security_group_additional_rules = {
+    "allow_db_access" = {
+      description                     = "Allow access to DB"
+      from_port                        = 5432
+      to_port                          = 5432
+      protocol                         = "tcp"
+      cidr_blocks                      = ["0.0.0.0/0"]
+      security_group_id                = [aws_security_group.aurora_sg.id]
+      source_cluster_security_group    = false
+    }
+  }
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
@@ -112,10 +109,9 @@ module "eks" {
       instance_types = ["t2.micro"]
       capacity_type  = "ON_DEMAND"
 
-      tags = {
-        
-      }
+      tags = {}
     }
   }
+
   tags = local.tags
 }
