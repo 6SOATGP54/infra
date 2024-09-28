@@ -1,10 +1,8 @@
 provider "aws" {
-  region = local.region
+  region  = "us-east-1"
 }
-
 locals {
   name   = "food-cluster"
-  region = "us-east-1"
 
   vpc_cidr = "172.31.0.0/16"
   azs      = ["us-east-1a", "us-east-1b"]
@@ -76,7 +74,7 @@ module "eks" {
       to_port                          = 5432
       protocol                         = "tcp"
       cidr_blocks                      = ["0.0.0.0/0"]
-      security_group_id                = [data.aws_securty_group.existing_sg.id]
+      security_group_id                = [data.aws_security_group.existing_sg.id]
       source_cluster_security_group    = false
     }
   }
