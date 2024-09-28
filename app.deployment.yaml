@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-food-deployment
+spec:
+  selector:
+    matchLabels:
+      app: app-food-selector
+  template:
+    metadata:
+      labels:
+        app: app-food-selector
+    spec:
+      containers:
+      - name: app-food
+        image: cledkube/food-app:latest
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        ports:
+        - containerPort: 8091
+        env:
+        - name: HOST_DB
+          value: food
+        - name: URL_DB
+          value: aurora-cluster-food.cluster-c58ekassejrz.us-east-1.rds.amazonaws.com
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: rds-postgres-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rds-postgres-secret
+              key: password
