@@ -90,7 +90,7 @@ module "eks" {
     to_port                          = 5432
     protocol                         = "tcp"
     cidr_blocks                      = ["0.0.0.0/0"]
-    security_group_id                = aws_security_group.aurora_sg.id
+    security_group_id                = [aws_security_group.aurora_sg.id]
     source_cluster_security_group    = false
   }]
 
