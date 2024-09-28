@@ -41,6 +41,25 @@ module "vpc" {
   }
 }
 
+resource "aws_security_group" "aurora_sg" {
+  name = "aurora-sg"
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.15.1"
@@ -98,6 +117,9 @@ module "eks" {
       }
     }
   }
+
+
+  
 
   tags = local.tags
 }
