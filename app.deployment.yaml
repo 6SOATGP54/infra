@@ -24,10 +24,10 @@ spec:
         ports:
         - containerPort: 8091
         env:
-        - name: HOST_DB
+        - name: DB_HOST
           value: food
         - name: URL_DB
-          value: aurora-cluster-food.cluster-c58ekassejrz.us-east-1.rds.amazonaws.com
+          value: aurora-cluster-food.cluster-c1w4uwac23w1.us-east-1.rds.amazonaws.com
         - name: DB_USER
           valueFrom:
             secretKeyRef:
