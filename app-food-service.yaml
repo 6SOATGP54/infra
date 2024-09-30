@@ -6,7 +6,12 @@ spec:
   selector:
     app: app-food-selector
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8091
+    - name: https
+      protocol: TCP
       port: 443
       targetPort: 8091
   type: LoadBalancer
