@@ -90,7 +90,7 @@ resource "aws_iam_policy_attachment" "csi_driver" {
 }
 
 resource "aws_iam_instance_profile" "nodes" {
-  name = "${var.cluster_name}-instance-profile"
+  name = "${var.cluster_name}-instance-profile-2"
   role = aws_iam_role.eks_nodes_roles.name
 }
 
