@@ -3,6 +3,6 @@ resource "aws_kms_key" "eks" {
 }
 
 resource "aws_kms_alias" "eks" {
-  name          = format("alias/%s-2", var.cluster_name)
+  name          = format("alias/%s-3", var.cluster_name)
   target_key_id = aws_kms_key.eks.key_id
 }
